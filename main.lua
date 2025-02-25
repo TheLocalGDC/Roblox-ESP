@@ -1,78 +1,66 @@
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
+local v1 = game:GetService("Players")
+local v2 = game:GetService("RunService")
 
-local function highlightCharacter(character)
-    if not character or not character:IsA("Model") then return end
-
-    for _, part in ipairs(character:GetDescendants()) do
-        if part:IsA("BasePart") then
-            if not part:FindFirstChild("SelectionBox") then
-                local highlight = Instance.new("SelectionBox")
-                highlight.Adornee = part
-                highlight.LineThickness = 0.05
-                highlight.Color3 = Color3.new(1, 0, 0) -- Set box color to red
-                highlight.SurfaceTransparency = 0.5
-                highlight.Parent = part
-            end
+local function v3(v4)
+    if not v4 or not v4:IsA("Model") then return end
+    for _, v5 in ipairs(v4:GetDescendants()) do
+        if v5:IsA("BasePart") and not v5:FindFirstChild("v6") then
+            local v6 = Instance.new("SelectionBox")
+            v6.Adornee = v5
+            v6.LineThickness = 0.05
+            v6.Color3 = Color3.new(1, 0, 0) 
+            v6.SurfaceTransparency = 0.5
+            v6.Parent = v5
         end
     end
 end
 
-local function createNameTag(character, playerName)
-    if not character or not playerName then return end
+local function v7(v8, v9)
+    local v10 = v8:FindFirstChild("Head")
+    if not v10 or v10:FindFirstChild("v11") then return end
 
-    local head = character:FindFirstChild("Head")
-    if not head then return end
+    local v11 = Instance.new("BillboardGui")
+    v11.Adornee = v10
+    v11.Size = UDim2.new(5, 0, 1, 0) 
+    v11.StudsOffset = Vector3.new(0, 2, 0)
+    v11.AlwaysOnTop = true
 
-    if not head:FindFirstChild("BillboardGui") then
-        local billboardGui = Instance.new("BillboardGui")
-        billboardGui.Adornee = head
-        billboardGui.Size = UDim2.new(5, 0, 1, 0) 
-        billboardGui.StudsOffset = Vector3.new(0, 2, 0)
-        billboardGui.AlwaysOnTop = true
+    local v12 = Instance.new("TextLabel")
+    v12.Size = UDim2.new(1, 0, 1, 0)
+    v12.BackgroundTransparency = 1
+    v12.Text = v9
+    v12.TextColor3 = Color3.new(1, 0, 0) 
+    v12.TextScaled = true
+    v12.Font = Enum.Font.SourceSansBold
 
-        local textLabel = Instance.new("TextLabel")
-        textLabel.Size = UDim2.new(1, 0, 1, 0)
-        textLabel.BackgroundTransparency = 1
-        textLabel.Text = playerName
-        textLabel.TextColor3 = Color3.new(1, 0, 0) -- Set text color to red
-        textLabel.TextScaled = true
-        textLabel.Font = Enum.Font.SourceSansBold
-
-        textLabel.Parent = billboardGui
-        billboardGui.Parent = head
-    end
+    v12.Parent = v11
+    v11.Parent = v10
 end
 
-local function addNameTagsAndHighlights()
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player.Character then
-            createNameTag(player.Character, player.Name)
-            highlightCharacter(player.Character)
+local function v13()
+    for _, v14 in ipairs(v1:GetPlayers()) do
+        if v14.Character then
+            v7(v14.Character, v14.Name)
+            v3(v14.Character)
         end
     end
 end
 
-Players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function(character)
-        if character then
-            createNameTag(character, player.Name)
-            highlightCharacter(character)
-        end
+v1.PlayerAdded:Connect(function(v15)
+    v15.CharacterAdded:Connect(function(v16)
+        v7(v16, v15.Name)
+        v3(v16)
     end)
 end)
 
-addNameTagsAndHighlights()
+v13()
 
-RunService.Heartbeat:Connect(function()
-    for _, player in ipairs(Players:GetPlayers()) do
-        local character = player.Character
-        if character then
-            local head = character:FindFirstChild("Head")
-            if head then
-                createNameTag(character, player.Name)
-            end
-            highlightCharacter(character)
+while true do
+    for _, v17 in ipairs(v1:GetPlayers()) do
+        local v18 = v17.Character
+        if v18 then
+            v3(v18)
         end
     end
-end)
+    task.wait()
+end 
